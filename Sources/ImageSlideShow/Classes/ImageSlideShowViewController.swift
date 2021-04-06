@@ -532,7 +532,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
                                                  y: locationPoint.y + 2 * (centerPoint.y - locationPoint.y))
                         
                     viewController.imageView?.center = point
-                    scrollView.setZoomScale(scrollView.maximumZoomScale,
+                    scrollView.setZoomScale(viewController.doubleTabZoomScale,
                                             animated: true)
                     
                 } else {

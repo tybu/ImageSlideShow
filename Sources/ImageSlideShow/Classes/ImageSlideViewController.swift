@@ -15,7 +15,8 @@ class ImageSlideViewController: UIViewController, UIScrollViewDelegate
 	
 	var slide:ImageSlideShowProtocol?
 	var enableZoom = false
-	
+    var doubleTabZoomScale: CGFloat = 2.0
+
 	var willBeginZoom:() -> Void = {}
 	
 	override func viewDidLoad()
@@ -24,7 +25,7 @@ class ImageSlideViewController: UIViewController, UIScrollViewDelegate
 		
 		if enableZoom
 		{
-			scrollView?.maximumZoomScale = 2.0
+			scrollView?.maximumZoomScale = 16.0
 			scrollView?.minimumZoomScale = 1.0
 			scrollView?.zoomScale = 1.0
 		}
