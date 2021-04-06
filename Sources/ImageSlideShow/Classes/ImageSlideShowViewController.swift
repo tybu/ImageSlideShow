@@ -520,8 +520,30 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
             return
         }
         
-        scrollView.setZoomScale((scrollView.zoomScale == scrollView.minimumZoomScale) ? scrollView.maximumZoomScale : scrollView.minimumZoomScale,
-                                animated: true)
+        switch gesture.state {
+            case .ended:
+                
+                if scrollView.zoomScale == scrollView.minimumZoomScale {
+                    
+                    let locationPoint: CGPoint = gesture.location(in: scrollView)
+                    let centerPoint: CGPoint = scrollView.center
+                    
+                    let point: CGPoint = CGPoint(x: locationPoint.x + 2 * (centerPoint.x - locationPoint.x),
+                                                 y: locationPoint.y + 2 * (centerPoint.y - locationPoint.y))
+                        
+                    viewController.imageView?.center = point
+                    scrollView.setZoomScale(scrollView.maximumZoomScale,
+                                            animated: true)
+                    
+                } else {
+                    viewController.imageView?.center = scrollView.center
+                    scrollView.setZoomScale(scrollView.minimumZoomScale,
+                                            animated: true)
+                }
+                
+            default:
+                break
+        }
     }
 
 }
