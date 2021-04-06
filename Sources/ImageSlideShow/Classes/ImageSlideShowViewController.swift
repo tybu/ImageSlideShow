@@ -39,6 +39,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	open var pageSpacing: CGFloat = 10.0
 	open var panDismissTolerance: CGFloat = 30.0
 	open var dismissOnPanGesture: Bool = false
+    open var dismissOnDoubleTapGesture: Bool = false
 	open var enableZoom: Bool = false
 	open var statusBarStyle: UIStatusBarStyle = .lightContent
 	open var navigationBarTintColor: UIColor = .white
@@ -161,6 +162,12 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 			scrollView()?.isDirectionalLockEnabled = true
 			scrollView()?.alwaysBounceVertical = false
 		}
+        
+        if (self.dismissOnDoubleTapGesture) {
+            let doubleTabGesture = UITapGestureRecognizer(target: self, action: #selector(doubleTapped(gesture:)))
+            tap.numberOfTapsRequired = 2
+            gestures.append(doubleTabGesture)
+        }
 		
 		view.gestureRecognizers = gestures
 		
@@ -500,4 +507,9 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 			break;
 		}
 	}
+    
+    @objc private func doubleTapped(gesture:UITapGestureRecognizer) {
+        //TODO
+    }
+
 }
