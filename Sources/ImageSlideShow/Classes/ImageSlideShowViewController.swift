@@ -444,7 +444,9 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	
 	@objc private func panGesture(gesture:UIPanGestureRecognizer)
 	{
-		let viewController = slideViewController(forPageIndex: currentIndex)
+        guard let viewController = slideViewController(forPageIndex: currentIndex) else {
+            return
+        }
 		
 		switch gesture.state
 		{
@@ -454,7 +456,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 			originPanViewCenter = view.center
 			panViewCenter = view.center
 			
-			stepAnimate(0, viewController!)
+			stepAnimate(0, viewController)
 			
 		case .changed:
 			let translation = gesture.translation(in: view)
@@ -469,7 +471,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 			
 			let distanceNormalized = max(0, min((distance / center), 1.0))
 			
-			stepAnimate(distanceNormalized, viewController!)
+			stepAnimate(distanceNormalized, viewController)
 			
 		case .ended, .cancelled, .failed:
 			let distanceY = abs(originPanViewCenter.y - panViewCenter.y)
@@ -484,7 +486,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 											self.navigationController?.view.alpha = 0.0
 					}, completion:nil)
 				
-				dismissAnimation(viewController!, gesture.velocity(in: gesture.view), {
+				dismissAnimation(viewController, gesture.velocity(in: gesture.view), {
 					
 					self.dismiss(sender: nil)
 					
@@ -503,7 +505,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 											
 					}, completion: nil)
 				
-				restoreAnimation(viewController!)
+				restoreAnimation(viewController)
 			}
 			
 		default:
