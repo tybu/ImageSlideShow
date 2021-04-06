@@ -444,7 +444,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	
 	@objc private func panGesture(gesture:UIPanGestureRecognizer)
 	{
-        guard let viewController = slideViewController(forPageIndex: currentIndex) else {
+        guard let viewController: UIViewController = slideViewController(forPageIndex: currentIndex) else {
             return
         }
 		
@@ -514,7 +514,14 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	}
     
     @objc private func doubleTapped(gesture:UITapGestureRecognizer) {
-        //TODO
+        
+        guard let viewController: ImageSlideViewController = slideViewController(forPageIndex: currentIndex),
+              let scrollView: UIScrollView = viewController.scrollView else {
+            return
+        }
+        
+        scrollView.setZoomScale((scrollView.zoomScale == scrollView.minimumZoomScale) ? scrollView.maximumZoomScale : scrollView.minimumZoomScale,
+                                animated: true)
     }
 
 }
