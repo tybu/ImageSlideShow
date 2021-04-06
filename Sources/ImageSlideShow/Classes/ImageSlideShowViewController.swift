@@ -39,7 +39,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	open var pageSpacing: CGFloat = 10.0
 	open var panDismissTolerance: CGFloat = 30.0
 	open var dismissOnPanGesture: Bool = false
-    open var dismissOnDoubleTapGesture: Bool = false
+    open var enableZoomOnDoubleTapGesture: Bool = false
 	open var enableZoom: Bool = false
 	open var statusBarStyle: UIStatusBarStyle = .lightContent
 	open var navigationBarTintColor: UIColor = .white
@@ -150,6 +150,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 		
 		var gestures = gestureRecognizers
 		let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapGesture(gesture:)))
+        tapGesture.numberOfTapsRequired = 1
 		gestures.append(tapGesture)
 		
 		if (dismissOnPanGesture)
@@ -163,10 +164,12 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 			scrollView()?.alwaysBounceVertical = false
 		}
         
-        if (self.dismissOnDoubleTapGesture) {
+        if (self.enableZoomOnDoubleTapGesture) {
             let doubleTabGesture = UITapGestureRecognizer(target: self, action: #selector(doubleTapped(gesture:)))
-            tap.numberOfTapsRequired = 2
+            doubleTabGesture.numberOfTapsRequired = 2
             gestures.append(doubleTabGesture)
+            
+            tapGesture.require(toFail: doubleTabGesture)
         }
 		
 		view.gestureRecognizers = gestures
@@ -441,7 +444,9 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	
 	@objc private func panGesture(gesture:UIPanGestureRecognizer)
 	{
-		let viewController = slideViewController(forPageIndex: currentIndex)
+        guard let viewController: UIViewController = slideViewController(forPageIndex: currentIndex) else {
+            return
+        }
 		
 		switch gesture.state
 		{
@@ -451,7 +456,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 			originPanViewCenter = view.center
 			panViewCenter = view.center
 			
-			stepAnimate(0, viewController!)
+			stepAnimate(0, viewController)
 			
 		case .changed:
 			let translation = gesture.translation(in: view)
@@ -466,7 +471,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 			
 			let distanceNormalized = max(0, min((distance / center), 1.0))
 			
-			stepAnimate(distanceNormalized, viewController!)
+			stepAnimate(distanceNormalized, viewController)
 			
 		case .ended, .cancelled, .failed:
 			let distanceY = abs(originPanViewCenter.y - panViewCenter.y)
@@ -481,7 +486,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 											self.navigationController?.view.alpha = 0.0
 					}, completion:nil)
 				
-				dismissAnimation(viewController!, gesture.velocity(in: gesture.view), {
+				dismissAnimation(viewController, gesture.velocity(in: gesture.view), {
 					
 					self.dismiss(sender: nil)
 					
@@ -500,7 +505,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 											
 					}, completion: nil)
 				
-				restoreAnimation(viewController!)
+				restoreAnimation(viewController)
 			}
 			
 		default:
@@ -509,7 +514,36 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	}
     
     @objc private func doubleTapped(gesture:UITapGestureRecognizer) {
-        //TODO
+        
+        guard let viewController: ImageSlideViewController = slideViewController(forPageIndex: currentIndex),
+              let scrollView: UIScrollView = viewController.scrollView else {
+            return
+        }
+        
+        switch gesture.state {
+            case .ended:
+                
+                if scrollView.zoomScale == scrollView.minimumZoomScale {
+                    
+                    let locationPoint: CGPoint = gesture.location(in: scrollView)
+                    let centerPoint: CGPoint = scrollView.center
+                    
+                    let point: CGPoint = CGPoint(x: locationPoint.x + 2 * (centerPoint.x - locationPoint.x),
+                                                 y: locationPoint.y + 2 * (centerPoint.y - locationPoint.y))
+                        
+                    viewController.imageView?.center = point
+                    scrollView.setZoomScale(scrollView.maximumZoomScale,
+                                            animated: true)
+                    
+                } else {
+                    viewController.imageView?.center = scrollView.center
+                    scrollView.setZoomScale(scrollView.minimumZoomScale,
+                                            animated: true)
+                }
+                
+            default:
+                break
+        }
     }
 
 }
