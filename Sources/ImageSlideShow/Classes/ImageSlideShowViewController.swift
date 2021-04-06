@@ -39,7 +39,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	open var pageSpacing: CGFloat = 10.0
 	open var panDismissTolerance: CGFloat = 30.0
 	open var dismissOnPanGesture: Bool = false
-    open var dismissOnDoubleTapGesture: Bool = false
+    open var enableZoomOnDoubleTapGesture: Bool = false
 	open var enableZoom: Bool = false
 	open var statusBarStyle: UIStatusBarStyle = .lightContent
 	open var navigationBarTintColor: UIColor = .white
@@ -150,6 +150,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 		
 		var gestures = gestureRecognizers
 		let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapGesture(gesture:)))
+        tapGesture.numberOfTapsRequired = 1
 		gestures.append(tapGesture)
 		
 		if (dismissOnPanGesture)
@@ -163,10 +164,12 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 			scrollView()?.alwaysBounceVertical = false
 		}
         
-        if (self.dismissOnDoubleTapGesture) {
+        if (self.enableZoomOnDoubleTapGesture) {
             let doubleTabGesture = UITapGestureRecognizer(target: self, action: #selector(doubleTapped(gesture:)))
-            tap.numberOfTapsRequired = 2
+            doubleTabGesture.numberOfTapsRequired = 2
             gestures.append(doubleTabGesture)
+            
+            tapGesture.require(toFail: doubleTabGesture)
         }
 		
 		view.gestureRecognizers = gestures
