@@ -67,6 +67,9 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
     open var startAnimationActivityIndicator: ((_ spinner: UIView?) -> Void)? = { _ in }
     open var stopAnimationActivityIndicator: ((_ spinner: UIView?) -> Void)? = { _ in }
 	
+    
+    open var navigationRightBarButtonItems: [UIBarButtonItem]?
+    open var navigationLeftBarButtonItems: [UIBarButtonItem]?
 	
 	fileprivate var originPanViewCenter:CGPoint = .zero
 	fileprivate var panViewCenter:CGPoint = .zero
@@ -151,7 +154,8 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 		
 		navigationController?.navigationBar.tintColor = navigationBarTintColor
 		navigationController?.view.backgroundColor = .black
-		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismiss(sender:)))
+        navigationItem.rightBarButtonItems = self.navigationRightBarButtonItems ?? [UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismiss(sender:)))]
+        navigationItem.leftBarButtonItems = self.navigationLeftBarButtonItems
 		
 		//	Manage Gestures
 		
