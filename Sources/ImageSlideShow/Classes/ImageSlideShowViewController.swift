@@ -44,6 +44,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	open var statusBarStyle: UIStatusBarStyle = .lightContent
 	open var navigationBarTintColor: UIColor = .white
 	open var hideNavigationBarOnAction: Bool = true
+    open var hideNavigationBarOnPageTransition: Bool = true
 	
 	//	Current index and slide
 	public var currentIndex: Int {
@@ -298,6 +299,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	
 	public func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController])
 	{
+        guard self.hideNavigationBarOnPageTransition else { return }
 		self.setNavigationBar(visible: false)
 	}
 	
