@@ -70,6 +70,8 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
     
     open var navigationRightBarButtonItems: [UIBarButtonItem]?
     open var navigationLeftBarButtonItems: [UIBarButtonItem]?
+    
+    open var navigationBarBackgroundColor: UIColor = .black
 	
 	fileprivate var originPanViewCenter:CGPoint = .zero
 	fileprivate var panViewCenter:CGPoint = .zero
@@ -77,6 +79,27 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	fileprivate var toggleBarButtonItem:UIBarButtonItem?
 	fileprivate var _currentIndex: Int = 0
 	fileprivate let slidesViewControllerCache = ImageSlideShowCache()
+    
+    fileprivate var _statusBarView: UIView?
+    private var statusBarView: UIView? {
+        if self._statusBarView == nil {
+            let statusBarHeight: CGFloat = UIApplication.shared.statusBarFrame.size.height
+
+            let statusBarView: UIView = UIView()
+            self.view.addSubview(statusBarView)
+
+            statusBarView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+            statusBarView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            statusBarView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1.0).isActive = true
+            statusBarView.heightAnchor.constraint(equalToConstant: statusBarHeight).isActive = true
+            statusBarView.translatesAutoresizingMaskIntoConstraints = false
+            
+            self._statusBarView = statusBarView
+        }
+        
+        return self._statusBarView
+    }
+
 	
 	override open var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
 		return .fade
@@ -152,10 +175,15 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 		
 		hidesBottomBarWhenPushed = true
 		
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.backgroundColor = self.navigationBarBackgroundColor
 		navigationController?.navigationBar.tintColor = navigationBarTintColor
 		navigationController?.view.backgroundColor = .black
         navigationItem.rightBarButtonItems = self.navigationRightBarButtonItems ?? [UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismiss(sender:)))]
         navigationItem.leftBarButtonItems = self.navigationLeftBarButtonItems
+
+        self.statusBarView?.backgroundColor = self.navigationBarBackgroundColor
 		
 		//	Manage Gestures
 		
@@ -259,7 +287,11 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 
 		navigationController?.setNavigationBarHidden(!visible, animated: true)
 		
-		UIView.animate(withDuration: 0.23) { self.setNeedsStatusBarAppearanceUpdate() }
+        UIView.animate(withDuration: 0.23) {
+            self.statusBarView?.isHidden = !visible
+            self.setNeedsStatusBarAppearanceUpdate()
+        }
+
 	}
 	
 	// MARK: UIPageViewControllerDataSource

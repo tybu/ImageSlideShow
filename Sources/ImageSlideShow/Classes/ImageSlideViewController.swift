@@ -27,6 +27,11 @@ class ImageSlideViewController: UIViewController, UIScrollViewDelegate
 	
 	override func viewDidLoad()
 	{
+		
+        if #available(iOS 11.0, *) {
+            self.scrollView?.contentInsetAdjustmentBehavior = .never
+        }
+		
 		super.viewDidLoad()
 		
 		if enableZoom
