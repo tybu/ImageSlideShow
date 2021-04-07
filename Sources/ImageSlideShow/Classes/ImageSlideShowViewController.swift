@@ -83,15 +83,17 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
     
     fileprivate var _statusBarView: UIView?
     private var statusBarView: UIView? {
-        if self._statusBarView == nil {
+        if self._statusBarView == nil,
+           let navigationBar = self.navigationController?.navigationBar {
+            
             let statusBarHeight: CGFloat = UIApplication.shared.statusBarFrame.size.height
 
             let statusBarView: UIView = UIView()
-            self.view.addSubview(statusBarView)
+            navigationBar.addSubview(statusBarView)
 
-            statusBarView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-            statusBarView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-            statusBarView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1.0).isActive = true
+            statusBarView.centerXAnchor.constraint(equalTo: navigationBar.centerXAnchor).isActive = true
+            statusBarView.bottomAnchor.constraint(equalTo: navigationBar.topAnchor ).isActive = true
+            statusBarView.widthAnchor.constraint(equalTo: navigationBar.widthAnchor, multiplier: 1.0).isActive = true
             statusBarView.heightAnchor.constraint(equalToConstant: statusBarHeight).isActive = true
             statusBarView.translatesAutoresizingMaskIntoConstraints = false
             
@@ -288,10 +290,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 
 		navigationController?.setNavigationBarHidden(!visible, animated: true)
 		
-        UIView.animate(withDuration: 0.23) {
-            self.statusBarView?.isHidden = !visible
-            self.setNeedsStatusBarAppearanceUpdate()
-        }
+        UIView.animate(withDuration: 0.23) { self.setNeedsStatusBarAppearanceUpdate() }
 
 	}
 	
