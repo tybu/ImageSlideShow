@@ -100,10 +100,11 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	
 	//	MARK: - Class methods
 	
-	class func imageSlideShowNavigationController() -> ImageSlideShowNavigationController
+    class func imageSlideShowNavigationController(modalTransitionStyle: UIModalTransitionStyle = .coverVertical) -> ImageSlideShowNavigationController
 	{
 		let controller = ImageSlideShowViewController.imageSlideShowStoryboard.instantiateViewController(withIdentifier: "ImageSlideShowNavigationController") as! ImageSlideShowNavigationController
 		controller.modalPresentationStyle = .overFullScreen
+        controller.modalTransitionStyle = modalTransitionStyle
 		controller.modalPresentationCapturesStatusBarAppearance = true
 		
 		return controller
@@ -118,9 +119,9 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 		return controller
 	}
 	
-	class open func presentFrom(_ viewController:UIViewController, configure:((_ controller: ImageSlideShowViewController) -> ())?)
+    class open func presentFrom(_ viewController:UIViewController, modalTransition: UIModalTransitionStyle = .coverVertical, configure:((_ controller: ImageSlideShowViewController) -> ())?)
 	{
-		let navController = self.imageSlideShowNavigationController()
+		let navController = self.imageSlideShowNavigationController(modalTransitionStyle: modalTransition)
 		if let issViewController = navController.visibleViewController as? ImageSlideShowViewController
 		{
 			configure?(issViewController)
