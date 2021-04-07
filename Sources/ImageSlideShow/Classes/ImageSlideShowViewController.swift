@@ -61,6 +61,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	open var stepAnimate:((_ offset:CGFloat, _ viewController:UIViewController) -> Void) = { _,_ in }
 	open var restoreAnimation:((_ viewController:UIViewController) -> Void) = { _ in }
 	open var dismissAnimation:((_ viewController:UIViewController, _ panDirection:CGPoint, _ completion: @escaping ()->()) -> Void) = { _,_,_ in }
+    open var willBeginZoom: (() -> Void)? = nil
     
     open var getCustomActivityIndicatorView: (() -> UIView?)?
     open var startAnimationActivityIndicator: ((_ spinner: UIView?) -> Void)? = { _ in }
@@ -348,9 +349,8 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 				guard let controller = self.storyboard?.instantiateViewController(withIdentifier: "ImageSlideViewController") as? ImageSlideViewController else { fatalError("Unable to instantiate a ImageSlideViewController.") }
 				controller.slide = slide
 				controller.enableZoom = enableZoom
-				controller.willBeginZoom = {
-					self.setNavigationBar(visible: false)
-				}
+                controller.willBeginZoom = self.willBeginZoom ?? { self.setNavigationBar(visible: false) }
+                
                 controller.customActivityIndicatorView = self.getCustomActivityIndicatorView?()
                 controller.startAnimationActivityIndicator = self.startAnimationActivityIndicator
                 controller.stopAnimationActivityIndicator = self.stopAnimationActivityIndicator
