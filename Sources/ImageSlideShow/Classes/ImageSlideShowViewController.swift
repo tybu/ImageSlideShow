@@ -60,6 +60,9 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	open var stepAnimate:((_ offset:CGFloat, _ viewController:UIViewController) -> Void) = { _,_ in }
 	open var restoreAnimation:((_ viewController:UIViewController) -> Void) = { _ in }
 	open var dismissAnimation:((_ viewController:UIViewController, _ panDirection:CGPoint, _ completion: @escaping ()->()) -> Void) = { _,_,_ in }
+    
+    open var navigationRightBarButtonItems: [UIBarButtonItem]?
+    open var navigationLeftBarButtonItems: [UIBarButtonItem]?
 	
 	fileprivate var originPanViewCenter:CGPoint = .zero
 	fileprivate var panViewCenter:CGPoint = .zero
@@ -143,7 +146,8 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 		
 		navigationController?.navigationBar.tintColor = navigationBarTintColor
 		navigationController?.view.backgroundColor = .black
-		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismiss(sender:)))
+        navigationItem.rightBarButtonItems = self.navigationRightBarButtonItems ?? [UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismiss(sender:)))]
+        navigationItem.leftBarButtonItems = self.navigationLeftBarButtonItems
 		
 		//	Manage Gestures
 		
