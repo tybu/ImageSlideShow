@@ -237,10 +237,14 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	}
 	
 	//	MARK: Actions
+    
+    @objc open func dismiss(sender:AnyObject?) {
+        self.dismiss(sender: sender, animated: true)
+    }
 	
-	@objc open func dismiss(sender:AnyObject?)
+    @objc open func dismiss(sender:AnyObject?, animated: Bool = true)
 	{
-		dismiss(animated: true, completion: nil)
+		dismiss(animated: animated, completion: nil)
 		
 		controllerDidDismiss()
 	}
@@ -535,7 +539,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 				
 				dismissAnimation(viewController, gesture.velocity(in: gesture.view), {
 					
-					self.dismiss(sender: nil)
+					self.dismiss(sender: nil, animated: false)
 					
 				})
 			}
