@@ -436,7 +436,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 				                           options: .beginFromCurrentState,
 				                           animations: {
 											
-											self.presentingViewController?.view.transform = .identity
+											//self.presentingViewController?.view.transform = .identity
 											
 											viewController.imageView?.center = self.originPanViewCenter
 											viewController.imageView?.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
@@ -457,7 +457,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 				                           options: .beginFromCurrentState,
 				                           animations: {
 											
-											self.presentingViewController?.view.transform = .identity
+											//self.presentingViewController?.view.transform = .identity
 											
 											var frame = viewController.imageView?.frame ?? .zero
 											frame.origin.y = (velocity > 0 ? self.view.frame.size.height*2 : -self.view.frame.size.height)
@@ -498,7 +498,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 		switch gesture.state
 		{
 		case .began:
-			presentingViewController?.view.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+			//presentingViewController?.view.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
 			
 			originPanViewCenter = view.center
 			panViewCenter = view.center
