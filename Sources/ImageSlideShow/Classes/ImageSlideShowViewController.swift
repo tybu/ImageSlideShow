@@ -180,6 +180,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 		
         navigationController?.navigationBar.isTranslucent = true
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+		navigationController?.navigationBar.shadowImage = UIImage()		
         navigationController?.navigationBar.backgroundColor = self.navigationBarBackgroundColor
 		navigationController?.navigationBar.tintColor = navigationBarTintColor
 		navigationController?.view.backgroundColor = .black
