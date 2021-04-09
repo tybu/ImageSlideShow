@@ -58,7 +58,8 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	public var slideShowViewWillAppear: ((_ animated: Bool)-> ())?
 	public var slideShowViewDidAppear: ((_ animated: Bool)-> ())?
 	
-	open var controllerDidDismiss:() -> Void = {}
+    open var controllerWillDismiss:() -> Void = {}
+    open var controllerDidDismiss:() -> Void = {}
 	open var stepAnimate:((_ offset:CGFloat, _ viewController:UIViewController) -> Void) = { _,_ in }
 	open var restoreAnimation:((_ viewController:UIViewController) -> Void) = { _ in }
 	open var dismissAnimation:((_ viewController:UIViewController, _ panDirection:CGPoint, _ completion: @escaping ()->()) -> Void) = { _,_,_ in }
@@ -244,9 +245,10 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	
     @objc open func dismiss(sender:AnyObject?, animated: Bool = true)
 	{
-		dismiss(animated: animated, completion: nil)
-		
-		controllerDidDismiss()
+        self.controllerWillDismiss()
+        dismiss(animated: animated, completion: {
+            self.controllerWillDismiss()
+        })
 	}
 	
 	open func goToPage(withIndex index:Int)
