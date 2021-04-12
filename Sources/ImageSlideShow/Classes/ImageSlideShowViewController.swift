@@ -247,7 +247,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	{
         self.controllerWillDismiss()
         dismiss(animated: animated, completion: {
-            self.controllerWillDismiss()
+            self.controllerDidDismiss()
         })
 	}
 	
