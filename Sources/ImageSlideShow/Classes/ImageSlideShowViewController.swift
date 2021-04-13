@@ -228,6 +228,15 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 			
 			updateSlideBasedUI()
 		}
+		
+        //preload prev / next
+        if index > 0 {
+            self.preloadPage(index: index - 1)
+        }
+        if let _slidesCount: Int = self.slides?.count,
+           index < _slidesCount - 1 {
+            self.preloadPage(index: index + 1)
+        }
 	}
 	
 	func setNavigationBar(visible:Bool)
@@ -285,6 +294,12 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 			return nil
 		}
 	}
+	
+    
+    private func preloadPage(index: Int) {
+        let vc: ImageSlideViewController? = self.slideViewController(forPageIndex: index)
+        vc?.loadImage()
+    }
 	
 	// MARK: Accessories
 	
