@@ -23,6 +23,7 @@ class ImageSlideViewController: UIViewController, UIScrollViewDelegate
     var startAnimationActivityIndicator: ((_ spinner: UIView?) -> Void)? = { _ in }
     var stopAnimationActivityIndicator: ((_ spinner: UIView?) -> Void)? = { _ in }
 
+    var onImageError: ((_ viewController: UIViewController,_ containerView: UIView?, _ error: Error?) -> Void)? = nil
 
 	
 	override func viewDidLoad()
@@ -61,15 +62,22 @@ class ImageSlideViewController: UIViewController, UIScrollViewDelegate
 
 		
 		slide?.image(completion: { (image, error) -> Void in
+            let onCompleted: (() -> Void) = {
+                self.loadingIndicatorView?.stopAnimating()
+                self.stopAnimationActivityIndicator?(self.customActivityIndicatorView)
+                self.scrollView?.isHidden = false
+            }
+            
+            guard (error == nil) else {
+                self.onImageError?(self, self.imageView, error)
+                onCompleted()
+                return
+            }
 			
 			DispatchQueue.main.async {
-			
 				self.imageView?.image = image
-				self.loadingIndicatorView?.stopAnimating()
-                self.stopAnimationActivityIndicator?(self.customActivityIndicatorView)
-				self.scrollView?.isHidden = false
-				
-			}
+                onCompleted()
+            }
 			
 		})
     }

@@ -68,6 +68,8 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
     open var getCustomActivityIndicatorView: (() -> UIView?)?
     open var startAnimationActivityIndicator: ((_ spinner: UIView?) -> Void)? = { _ in }
     open var stopAnimationActivityIndicator: ((_ spinner: UIView?) -> Void)? = { _ in }
+    
+    open var onImageError: ((_ viewController: UIViewController,_ containerView: UIView?, _ error: Error?) -> Void)? = nil
 	
     
     open var navigationRightBarButtonItems: [UIBarButtonItem]?
@@ -398,6 +400,8 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
                 controller.customActivityIndicatorView = self.getCustomActivityIndicatorView?()
                 controller.startAnimationActivityIndicator = self.startAnimationActivityIndicator
                 controller.stopAnimationActivityIndicator = self.stopAnimationActivityIndicator
+                
+                controller.onImageError = self.onImageError
 				
 				slidesViewControllerCache.setObject(controller, forKey: slide.slideIdentifier() as AnyObject)
 				
