@@ -24,6 +24,8 @@ class ImageSlideViewController: UIViewController, UIScrollViewDelegate
     var stopAnimationActivityIndicator: ((_ spinner: UIView?) -> Void)? = { _ in }
 
     var onImageError: ((_ viewController: UIViewController,_ containerView: UIView?, _ error: Error?) -> Void)? = nil
+    
+    private var cachedImage: UIImage? = nil
 
 	
 	override func viewDidLoad()
@@ -60,26 +62,7 @@ class ImageSlideViewController: UIViewController, UIScrollViewDelegate
 	        self.loadingIndicatorView?.startAnimating()
         }
 
-		
-		slide?.image(completion: { (image, error) -> Void in
-            let onCompleted: (() -> Void) = {
-                self.loadingIndicatorView?.stopAnimating()
-                self.stopAnimationActivityIndicator?(self.customActivityIndicatorView)
-                self.scrollView?.isHidden = false
-            }
-            
-            guard (error == nil) else {
-                self.onImageError?(self, self.imageView, error)
-                onCompleted()
-                return
-            }
-			
-			DispatchQueue.main.async {
-				self.imageView?.image = image
-                onCompleted()
-            }
-			
-		})
+        self.loadImage()
     }
 	
 	override func viewDidDisappear(_ animated: Bool)
@@ -110,4 +93,40 @@ class ImageSlideViewController: UIViewController, UIScrollViewDelegate
 		
 		return nil
 	}
+    
+    // MARK :
+    public func loadImage() {
+        
+        let onCompleted: (() -> Void) = {
+            self.loadingIndicatorView?.stopAnimating()
+            self.stopAnimationActivityIndicator?(self.customActivityIndicatorView)
+            self.scrollView?.isHidden = false
+        }
+
+        
+        if let _cachedImage: UIImage = self.cachedImage {
+            self.imageView?.image = _cachedImage
+            onCompleted()
+        } else {
+            self.slide?.image(completion: { (image, error) -> Void in
+                
+                guard (error == nil) else {
+                    self.onImageError?(self, self.imageView, error)
+                    self.cachedImage = nil
+                    onCompleted()
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    if let _imageView: UIImageView = self.imageView {
+                        _imageView.image = image
+                    } else {
+                        self.cachedImage = image
+                    }
+                    
+                    onCompleted()
+                }
+            })
+        }
+    }
 }
