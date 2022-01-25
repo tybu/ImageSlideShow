@@ -57,6 +57,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	public var slideShowViewDidLoad: (()->())?
 	public var slideShowViewWillAppear: ((_ animated: Bool)-> ())?
 	public var slideShowViewDidAppear: ((_ animated: Bool)-> ())?
+    public var showAction: (() -> Void) = {}
 	
     open var controllerWillDismiss:() -> Void = {}
     open var controllerDidDismiss:() -> Void = {}
@@ -240,6 +241,9 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	}
 	
 	//	MARK: Actions
+    @objc open func callShowAction() {
+        showAction()
+    }
     
     @objc open func dismiss(sender:AnyObject?) {
         self.dismiss(sender: sender, animated: true)
