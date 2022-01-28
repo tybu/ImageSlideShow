@@ -259,10 +259,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	
 	open func goToPage(withIndex index:Int)
 	{
-		if index != _currentIndex
-		{
-			setPage(withIndex: index)
-		}
+        setPage(withIndex: index)
 	}
 	
 	open func goToNextPage()
@@ -287,7 +284,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	{
 		if	let viewController = slideViewController(forPageIndex: index)
 		{
-			setViewControllers([viewController], direction: (index > _currentIndex ? .forward : .reverse), animated: true, completion: nil)
+			setViewControllers([viewController], direction: (index >= _currentIndex ? .forward : .reverse), animated: true, completion: nil)
 			
 			_currentIndex = index
 			
