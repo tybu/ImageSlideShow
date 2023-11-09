@@ -84,6 +84,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	fileprivate var toggleBarButtonItem:UIBarButtonItem?
 	fileprivate var _currentIndex: Int = 0
 	fileprivate let slidesViewControllerCache = ImageSlideShowCache()
+    private var _isVCClosing: Bool = false
     
     fileprivate var _statusBarView: UIView?
     private var statusBarView: UIView? {
@@ -127,11 +128,11 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 		return true
 	}
 	
-	override open var supportedInterfaceOrientations: UIInterfaceOrientationMask
-	{
-		return .all
-	}
-	
+    override open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        let orientationMask: UIInterfaceOrientationMask = _isVCClosing ? .portrait : .allButUpsideDown
+        return orientationMask
+    }
+
 	//	MARK: - Class methods
 	
     class func imageSlideShowNavigationController(modalTransitionStyle: UIModalTransitionStyle = .coverVertical) -> ImageSlideShowNavigationController
@@ -251,6 +252,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 	
     @objc open func dismiss(sender:AnyObject?, animated: Bool = true)
 	{
+        _isVCClosing = true
         self.controllerWillDismiss()
         dismiss(animated: animated, completion: {
             self.controllerDidDismiss()
