@@ -417,7 +417,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
 		}
 	}
 	
-	private func updateSlideBasedUI()
+	public func updateSlideBasedUI()
 	{
 		if let title = currentSlide?.title
 		{
